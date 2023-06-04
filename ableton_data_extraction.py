@@ -3,6 +3,8 @@ from pylive import LiveAPI
 
 live = LiveAPI()
 
+output_dir = "Path/To/Output/Folder"  # Specify the desired output directory path here
+
 def convert_audio_to_midi():
     tracks = live.get_tracks()
     for track in tracks:
@@ -12,7 +14,9 @@ def convert_audio_to_midi():
                 clip_name = clip.get_name()
                 track_index = track.get_index()
                 clip.start_playing()
-                live.song().capture_midi(track_index, clip_name)
+                midi_filename = f"{clip_name}.mid"
+                midi_path = os.path.join(output_dir, midi_filename)
+                clip.export_midi(track_index, midi_path)
 
 def extract_midi():
     tracks = live.get_tracks()
@@ -22,7 +26,9 @@ def extract_midi():
             if clip.is_midi_clip():
                 clip_name = clip.get_name()
                 track_index = track.get_index()
-                clip.export_midi(track_index, clip_name)
+                midi_filename = f"{clip_name}.mid"
+                midi_path = os.path.join(output_dir, midi_filename)
+                clip.export_midi(track_index, midi_path)
 
 def process_projects(folder_path):
     projects = os.listdir(folder_path)
@@ -34,4 +40,4 @@ def process_projects(folder_path):
             extract_midi()
             live.close_project()
 
-process_projects("Path/To/Projects/Folder")
+process_projects("Path/To/Projects/Folder") # Specify the desired Project directory path here
